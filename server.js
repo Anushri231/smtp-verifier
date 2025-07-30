@@ -1,22 +1,43 @@
-const express = require('express');
-const { ping, SmtpPingStatus } = require('./index'); // point to actual ping() from repo
+const express = require("express");
+const { ping, SmtpPingStatus } = require("smtp-ping");
+const cors = require("cors");
 
 const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(cors());
 app.use(express.json());
 
-app.post('/verify', async (req, res) => {
+app.post("/verify", async (req, res) => {
   const { email } = req.body;
 
-  if (!email) return res.status(400).json({ error: 'Email required' });
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
 
   try {
     const { complete, status, error } = await ping(email);
-    res.json({ complete, status, error: error?.message || null });
+
+    return res.json({
+      email,
+      status,
+      success: status === SmtpPingStatus.OK,
+      complete,
+      error: error?.message || null,
+    });
+
   } catch (err) {
-    res.status(500).json({ error: 'Internal error', message: err.message });
+    return res.status(500).json({
+      error: "Internal server error",
+      message: err.message
+    });
   }
 });
 
-app.listen(3000, () => {
-  console.log('SMTP Verifier running on port 3000');
+app.get("/", (req, res) => {
+  res.send("SMTP Verifier running");
+});
+
+app.listen(port, () => {
+  console.log(`SMTP Verifier running on port ${port}`);
 });

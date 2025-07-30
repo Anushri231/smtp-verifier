@@ -1,17 +1,13 @@
 {
   "name": "smtp-verifier",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "description": "",
   "dependencies": {
-    "express": "^5.1.0",
-    "smtp-ping": "^1.0.0"
+    "express": "^4.18.2",
+    "smtp-ping": "^1.0.0",
+    "cors": "^2.8.5"
   }
 }
